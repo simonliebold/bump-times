@@ -40,11 +40,18 @@ function App() {
 
   // Model Input
   const [modelInput, setModelInput] = useState([])
+  const [dateString, setDateString] = useState("")
   useEffect(() => {
     const month = selected.getMonth()
     const day = selected.getDay()
 
-    const dateString = selected.toJSON().split("T")[0]
+    setDateString(
+      selected.getFullYear() +
+        "-" +
+        (""+(selected.getMonth() + 1)).padStart(2, 0) +
+        "-" +
+        (""+selected.getDate()).padStart(2, 0)
+    )
 
     const holiday =
       day === 0 ||
@@ -109,7 +116,7 @@ function App() {
         .sub(inputMin)
         .div(inputMax.sub(inputMin))
     )
-  }, [selected, holidays])
+  }, [selected, holidays, dateString])
 
   // Model Prediction
   const [prediction, setPrediction] = useState([])
@@ -130,12 +137,7 @@ function App() {
   const [dateData, setDateData] = useState([])
   const getDateData = async () => {
     const res = await axios.get(
-      "https://lie-bold.de/ai/get-date.php?date=" +
-        selected.getFullYear() +
-        "-" +
-        (selected.getMonth() + 1) +
-        "-" +
-        selected.getDate()
+      "https://lie-bold.de/ai/get-date.php?date=" + dateString
     )
     setDateData(res.data.data.map((obj) => obj.checkedIn))
   }
@@ -150,13 +152,7 @@ function App() {
         prediction={prediction}
         dates={x}
         dateData={dateData}
-        datum={
-          selected.getFullYear() +
-          "-" +
-          (selected.getMonth() + 1) +
-          "-" +
-          selected.getDate()
-        }
+        dateString={dateString}
       />
       <DayPicker
         required

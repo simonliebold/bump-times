@@ -42,7 +42,12 @@ function Chart(props) {
       },
       title: {
         display: true,
-        text: props.datum,
+        text: new Date(props.dateString).toLocaleDateString("de-DE", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
       },
     },
     scales: {
@@ -73,8 +78,8 @@ function Chart(props) {
         backgroundColor: "transparent",
         borderDash: [5, 5],
         borderRadius: 100,
-    },
-    {
+      },
+      {
         label: "Messung",
         data: props.dates.map((date, index) => [date, props.dateData[index]]),
         borderColor: "blue",
