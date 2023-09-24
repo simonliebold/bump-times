@@ -24,8 +24,10 @@ ChartJS.register(
 
 let labels = []
 
-for (let i = 60; i < 240; i++) {
-  labels.push(i / 10)
+for (let stunde = 6; stunde < 24; stunde++) {
+  for (let minute = 0; minute < 60; minute++) {
+    labels.push((""+stunde).padStart(2, 0) + ":" + (""+minute).padStart(2, 0))
+  }
 }
 
 function Chart(props) {
@@ -50,7 +52,7 @@ function Chart(props) {
         ticks: {
           stepSize: 1.0,
         },
-      }
+      },
     },
   }
   const data = {

@@ -75,8 +75,10 @@ function App() {
     ]
 
     let input = []
-    for (let uhrzeit = 60; uhrzeit < 240; uhrzeit++) {
-      input.push([uhrzeit / 10, holiday, ...days, ...months])
+    for (let stunde = 6; stunde < 24; stunde++) {
+      for (let minute = 0; minute < 60; minute++) {
+        input.push([parseFloat(stunde + minute/60), holiday, ...days, ...months])
+      }
     }
     setModelInput(
       tf
@@ -100,6 +102,20 @@ function App() {
     predict()
     // eslint-disable-next-line
   }, [modelInput])
+
+  // Check Prediction
+  const [dateData, setDateData] = useState([])
+  const getDateData = async () => {
+    const res = await axios.get(
+      "https://lie-bold.de/ai/get-date.php?date=" +
+        selected.toISOString().split("T")[0]
+    )
+    setDateData(res.data.data)
+  }
+  useEffect(() => {
+    getDateData()
+    // console.log(dateData)
+  }, [prediction])
 
   return (
     <>
