@@ -13,7 +13,10 @@ import "./style.css"
 
 import generatedGitInfo from "./generatedGitInfo.json"
 
-const model = await tf.loadLayersModel("http://localhost:3000/model/model.json")
+const model = await tf.loadLayersModel("http://lie-bold.de/ai/model/model.json")
+// const model = await tf.loadLayersModel(
+//   "http://localhost:3000/ai/model/model.json"
+// )
 const outputMax = tf.tensor(240, [1, 1]).max()
 const outputMin = tf.tensor(0, [1, 1]).min()
 const inputMax = tf.tensor(23.983333587646484, [1, 1]).max()
@@ -48,9 +51,9 @@ function App() {
     setDateString(
       selected.getFullYear() +
         "-" +
-        (""+(selected.getMonth() + 1)).padStart(2, 0) +
+        ("" + (selected.getMonth() + 1)).padStart(2, 0) +
         "-" +
-        (""+selected.getDate()).padStart(2, 0)
+        ("" + selected.getDate()).padStart(2, 0)
     )
 
     const holiday =
@@ -112,7 +115,7 @@ function App() {
     setX(labels)
     setModelInput(
       tf
-        .tensor2d(input, [input.length, input[0].length])
+        .tensor(input, [input.length, input[0].length])
         .sub(inputMin)
         .div(inputMax.sub(inputMin))
     )
@@ -121,12 +124,14 @@ function App() {
   // Model Prediction
   const [prediction, setPrediction] = useState([])
   const predict = async () => {
-    const predictions = await model
-      .predict(modelInput)
-      .mul(outputMax.sub(outputMin))
-      .add(outputMin)
-      .array()
-    setPrediction(predictions)
+    try {
+      const predictions = await model
+        .predict(modelInput)
+        .mul(outputMax.sub(outputMin))
+        .add(outputMin)
+        .array()
+      setPrediction(predictions)
+    } catch (error) {}
   }
   useEffect(() => {
     predict()

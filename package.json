@@ -1,7 +1,8 @@
 {
   "name": "stosszeiten",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "/ai/model/",
   "dependencies": {
     "@tensorflow/tfjs": "^4.11.0",
     "@testing-library/jest-dom": "^5.17.0",
