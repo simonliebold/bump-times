@@ -7,12 +7,13 @@ import { de } from "date-fns/locale"
 import "react-day-picker/dist/style.css"
 
 import axios from "axios"
+import Chart from "./Chart"
 
 const model = await tf.loadLayersModel("http://localhost:3000/model/model.json")
-const outputMax = tf.tensor(240, [1,1]).max()
-const outputMin = tf.tensor(0, [1,1]).min()
-const inputMax = tf.tensor(23.983333587646484, [1,1]).max()
-const inputMin = tf.tensor(0, [1,1]).min()
+const outputMax = tf.tensor(240, [1, 1]).max()
+const outputMin = tf.tensor(0, [1, 1]).min()
+const inputMax = tf.tensor(23.983333587646484, [1, 1]).max()
+const inputMin = tf.tensor(0, [1, 1]).min()
 
 function App() {
   // Date Selection
@@ -75,25 +76,34 @@ function App() {
     for (let uhrzeit = 60; uhrzeit < 240; uhrzeit++) {
       input.push([uhrzeit / 10, holiday, ...days, ...months])
     }
-    setModelInput(tf.tensor2d(input, [input.length, input[0].length]).sub(inputMin).div(inputMax.sub(inputMin)))
+    setModelInput(
+      tf
+        .tensor2d(input, [input.length, input[0].length])
+        .sub(inputMin)
+        .div(inputMax.sub(inputMin))
+    )
   }, [selected, holidays])
 
   // Model Prediction
   const [prediction, setPrediction] = useState([])
   const predict = async () => {
-    const predictions = await model.predict(modelInput).mul(outputMax.sub(outputMin)).add(outputMin).array()
+    const predictions = await model
+      .predict(modelInput)
+      .mul(outputMax.sub(outputMin))
+      .add(outputMin)
+      .array()
     setPrediction(predictions)
   }
   useEffect(() => {
     predict()
+    // eslint-disable-next-line
   }, [modelInput])
 
-  useEffect(() => {
-    console.log(prediction)
-  }, [prediction])
+  useEffect(() => {}, [prediction])
 
   return (
     <>
+      <Chart prediction={prediction} />
       <DayPicker
         required
         mode="single"
