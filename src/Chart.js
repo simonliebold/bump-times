@@ -26,7 +26,9 @@ let labels = []
 
 for (let stunde = 6; stunde < 24; stunde++) {
   for (let minute = 0; minute < 60; minute++) {
-    labels.push((""+stunde).padStart(2, 0) + ":" + (""+minute).padStart(2, 0))
+    labels.push(
+      ("" + stunde).padStart(2, 0) + ":" + ("" + minute).padStart(2, 0)
+    )
   }
 }
 
@@ -40,7 +42,7 @@ function Chart(props) {
       },
       title: {
         display: true,
-        text: "Vorhersage für Besucher",
+        text: props.datum,
       },
     },
     scales: {
@@ -50,19 +52,34 @@ function Chart(props) {
       },
       x: {
         ticks: {
-          stepSize: 1.0,
+          stepSize: 100,
         },
       },
     },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
   }
+
   const data = {
     labels,
     datasets: [
       {
-        label: "Besucher",
-        data: labels.map((label, index) => [label, props.prediction[index]]),
-        borderColor: "transparent",
-        backgroundColor: "blue",
+        label: "Vorhersage",
+        data: props.dates.map((date, index) => [date, props.prediction[index]]),
+        borderColor: "rgb(0, 0, 255, 0.25)",
+        backgroundColor: "transparent",
+        borderDash: [5, 5],
+        borderRadius: 100,
+    },
+    {
+        label: "Messung",
+        data: props.dates.map((date, index) => [date, props.dateData[index]]),
+        borderColor: "blue",
+        backgroundColor: "transparent",
+        borderWidth: 2,
       },
     ],
   }

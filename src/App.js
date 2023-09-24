@@ -18,6 +18,8 @@ const inputMax = tf.tensor(23.983333587646484, [1, 1]).max()
 const inputMin = tf.tensor(0, [1, 1]).min()
 
 function App() {
+  const [x, setX] = useState([])
+
   // Date Selection
   const [selected, setSelected] = useState(new Date())
   useEffect(() => {}, [selected])
@@ -74,12 +76,31 @@ function App() {
       month === 11 ? 1 : 0,
     ]
 
+    let stundeMin = 6
+    let stundeMax = 24
+
+    if (holiday === 1) {
+      stundeMin = 7
+      stundeMax = 23
+    }
+
     let input = []
-    for (let stunde = 6; stunde < 24; stunde++) {
+    let labels = []
+    for (let stunde = stundeMin; stunde < stundeMax; stunde++) {
       for (let minute = 0; minute < 60; minute++) {
-        input.push([parseFloat(stunde + minute/60), holiday, ...days, ...months])
+        labels.push(
+          ("" + stunde).padStart(2, 0) + ":" + ("" + minute).padStart(2, 0)
+        )
+        input.push([
+          parseFloat(stunde + minute / 60),
+          holiday,
+          ...days,
+          ...months,
+        ])
       }
     }
+
+    setX(labels)
     setModelInput(
       tf
         .tensor2d(input, [input.length, input[0].length])
@@ -108,18 +129,33 @@ function App() {
   const getDateData = async () => {
     const res = await axios.get(
       "https://lie-bold.de/ai/get-date.php?date=" +
-        selected.toISOString().split("T")[0]
+        selected.getFullYear() +
+        "-" +
+        (selected.getMonth() + 1) +
+        "-" +
+        selected.getDate()
     )
-    setDateData(res.data.data)
+    setDateData(res.data.data.map((obj) => obj.checkedIn))
   }
   useEffect(() => {
     getDateData()
-    // console.log(dateData)
+    // eslint-disable-next-line
   }, [prediction])
 
   return (
     <>
-      <Chart prediction={prediction} />
+      <Chart
+        prediction={prediction}
+        dates={x}
+        dateData={dateData}
+        datum={
+          selected.getFullYear() +
+          "-" +
+          (selected.getMonth() + 1) +
+          "-" +
+          selected.getDate()
+        }
+      />
       <DayPicker
         required
         mode="single"
