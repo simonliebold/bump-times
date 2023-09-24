@@ -11,6 +11,8 @@ import Chart from "./Chart"
 
 import "./style.css"
 
+import generatedGitInfo from "./generatedGitInfo.json"
+
 const model = await tf.loadLayersModel("http://localhost:3000/model/model.json")
 const outputMax = tf.tensor(240, [1, 1]).max()
 const outputMin = tf.tensor(0, [1, 1]).min()
@@ -163,6 +165,9 @@ function App() {
         onSelect={setSelected}
         locale={de}
       />
+      <p style={{ textAlign: "center", color: "grey" }}>
+        {generatedGitInfo.gitBranch + "@" + generatedGitInfo.gitCommitHash}
+      </p>
     </>
   )
 }
