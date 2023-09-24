@@ -46,6 +46,11 @@ function Chart(props) {
         max: 200,
         min: 0,
       },
+      x: {
+        ticks: {
+          stepSize: 1.0,
+        },
+      }
     },
   }
   const data = {
@@ -54,8 +59,8 @@ function Chart(props) {
       {
         label: "Besucher",
         data: labels.map((label, index) => [label, props.prediction[index]]),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "transparent",
+        backgroundColor: "blue",
       },
     ],
   }

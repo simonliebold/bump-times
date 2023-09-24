@@ -9,6 +9,8 @@ import "react-day-picker/dist/style.css"
 import axios from "axios"
 import Chart from "./Chart"
 
+import "./style.css"
+
 const model = await tf.loadLayersModel("http://localhost:3000/model/model.json")
 const outputMax = tf.tensor(240, [1, 1]).max()
 const outputMin = tf.tensor(0, [1, 1]).min()
@@ -98,8 +100,6 @@ function App() {
     predict()
     // eslint-disable-next-line
   }, [modelInput])
-
-  useEffect(() => {}, [prediction])
 
   return (
     <>
