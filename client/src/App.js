@@ -13,10 +13,10 @@ import "./style.css"
 
 import generatedGitInfo from "./generatedGitInfo.json"
 
-const model = await tf.loadLayersModel("http://lie-bold.de/ai/model/model.json")
-// const model = await tf.loadLayersModel(
-//   "http://localhost:3000/ai/model/model.json"
-// )
+// const model = await tf.loadLayersModel("http://lie-bold.de/ai/model/model.json")
+const model = await tf.loadLayersModel(
+  "http://localhost:3000/ai/model/model.json"
+)
 const outputMax = tf.tensor(240, [1, 1]).max()
 const outputMin = tf.tensor(0, [1, 1]).min()
 const inputMax = tf.tensor(23.983333587646484, [1, 1]).max()

@@ -57,7 +57,11 @@ function Chart(props) {
       },
       x: {
         ticks: {
-          stepSize: 100,
+          callback: function(val, index) {
+            return parseInt(this.getLabelForValue(val).split(":")[0] )
+          },
+          // autoSkip: true,
+          maxTicksLimit: 18,
         },
       },
     },
@@ -65,6 +69,10 @@ function Chart(props) {
       point: {
         radius: 0,
       },
+    },
+    interaction: {
+      intersect: false,
+      mode: "index",
     },
   }
 
