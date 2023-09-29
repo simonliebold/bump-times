@@ -4,4 +4,4 @@ GET https://feiertage-api.de/api/?jahr=2023&nur_land=NW
 ###
 
 
-GET https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=52.03333&lon=8.53333&dt=1680148800&units=metric&appid=e734659ff04b5da56eac8283f64a7568
+GET https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=52.03333&lon=8.53333&dt=1694016000&units=metric&appid=e734659ff04b5da56eac8283f64a7568

@@ -10,13 +10,17 @@ import axios from "axios"
 import Chart from "./Chart"
 
 import "./style.css"
+import FormSelect from "react-bootstrap/FormSelect"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/Container"
 
 import generatedGitInfo from "./generatedGitInfo.json"
 
-// const model = await tf.loadLayersModel("http://lie-bold.de/ai/model/model.json")
-const model = await tf.loadLayersModel(
-  "http://localhost:3000/ai/model/model.json"
-)
+const model = await tf.loadLayersModel("http://lie-bold.de/ai/model/model.json")
+// const model = await tf.loadLayersModel(
+//   "http://localhost:3000/ai/model/model.json"
+// )
 const outputMax = tf.tensor(240, [1, 1]).max()
 const outputMin = tf.tensor(0, [1, 1]).min()
 const inputMax = tf.tensor(23.983333587646484, [1, 1]).max()
@@ -138,38 +142,56 @@ function App() {
     // eslint-disable-next-line
   }, [modelInput])
 
+  // Select club
+  const [club, setClub] = useState(1)
+  let options = []
+  for (let i = 1; i < 55; i++) {
+    options.push(
+      <option key={i} value={i}>
+        Club {i}
+      </option>
+    )
+  }
+
   // Check Prediction
   const [dateData, setDateData] = useState([])
   const getDateData = async () => {
     const res = await axios.get(
-      "https://lie-bold.de/ai/get-date.php?date=" + dateString
+      "https://lie-bold.de/ai/get-date.php?date=" + dateString + "&club=" + club
     )
     setDateData(res.data.data.map((obj) => obj.checkedIn))
   }
   useEffect(() => {
     getDateData()
     // eslint-disable-next-line
-  }, [prediction])
+  }, [prediction, club])
 
   return (
-    <>
+    <Container>
       <Chart
         prediction={prediction}
         dates={x}
         dateData={dateData}
         dateString={dateString}
       />
-      <DayPicker
-        required
-        mode="single"
-        selected={selected}
-        onSelect={setSelected}
-        locale={de}
-      />
+      <Row className="mt-4">
+        <Col>
+          <FormSelect onChange={(e) => setClub(e.target.value)}>
+            {options.map((option) => option)}
+          </FormSelect>
+          <DayPicker
+            required
+            mode="single"
+            selected={selected}
+            onSelect={setSelected}
+            locale={de}
+          />
+        </Col>
+      </Row>
       <p style={{ textAlign: "center", color: "grey" }}>
         {generatedGitInfo.gitBranch + "@" + generatedGitInfo.gitCommitHash}
       </p>
-    </>
+    </Container>
   )
 }
 
